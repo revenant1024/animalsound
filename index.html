@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>동물소리 API</title>
+</head>
+<body>
+    <h1 id="sound">동물 소리를 입력하세요</h1>
+    <input id="name" type="text" placeholder="예: dog, cat, pig">
+    <button onclick="getSound()">API 요청</button>
+    <script>
+       function getSound() {
+           const name = document.getElementById('name').value.trim(); // 입력 값에서 공백 제거
+
+           if (!name) {
+               document.getElementById('sound').innerHTML = '동물 이름을 입력하세요!';
+               return;
+           }
+
+           fetch(`http://localhost:3000/sound/${name}`)
+               .then((response) => {
+                   if (!response.ok) {
+                       throw new Error('네트워크 응답에 문제가 있습니다.');
+                   }
+                   return response.json();
+               })
+               .then((data) => {
+                   console.log(data.sound);
+                   document.getElementById('sound').innerHTML = `동물 소리: ${data.sound}`;
+               })
+               .catch((error) => {
+                   console.error('Error:', error);
+                   document.getElementById('sound').innerHTML = '오류 발생: 서버가 응답하지 않습니다.';
+               });
+       }
+    </script>
+</body>
+</html>
